@@ -5,20 +5,20 @@
       <!-- breadcrumb-area -->
       <section
         class="breadcrumb-area breadcrumb-bg"
-        style="background-image: url('/img/bg/breadcrumb_bg.jpg')"
+        style="background-image: url('/img/bg/sleeping_dog.jpg')"
       >
         <div class="container">
           <div class="row">
             <div class="col-12">
               <div class="breadcrumb-content">
                 <h2 class="title">유기 동물</h2>
-                <nav aria-label="breadcrumb">
-                  <ol class="breadcrumb">
+                <nav style="background-color:#f5f2eb; width:180px; border-radius: 15px 15px 40px 15px;" aria-label="breadcrumb">
+                  <ol style="margin-left:20px" class="breadcrumb">
                     <li class="breadcrumb-item">
-                      <router-link to="/">홈</router-link>
+                      <router-link style="color:gray" to="/">홈</router-link>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">
-                      유기 동물
+                    <li class="breadcrumb-item" aria-current="page">
+                      <router-link to="/shelList">유기 동물 공고</router-link>
                     </li>
                   </ol>
                 </nav>
@@ -30,7 +30,7 @@
       <!-- breadcrumb-area-end -->
 
       <!-- shop-area -->
-      <div class="shop-area pt-110 pb-110">
+      <div class="shop-area pt-30 pb-60">
         <div class="container">
           <div class="row justify-content-center">
             <div class="col-lg-1"></div>
@@ -97,7 +97,7 @@
                     <form action="#">
                       <label for="neuterYn">중성화</label>
                       <select id="neuterYn" class="selected"  v-model="search.neuterYn">>
-                        <option value="null">전체</option>
+                        <option value="">전체</option>
                         <option value="Y">예</option>
                         <option value="N">아니요</option>
                         <option value="U">미상</option>
@@ -128,7 +128,7 @@
                     <form action="#">
                       <label for="processState">상태</label>
                       <select id="processState" class="selected"  v-model="search.processState">>
-                        <option value="null">전체</option>
+                        <option value="">전체</option>
                         <option value="protect">보호중</option>
                         <option value="notice">공고중 </option>
                       </select>
@@ -172,7 +172,7 @@
                     <form action="#">
                       <label for="careAddr">지역</label>
                       <select id="careAddr" class="selected" v-model="search.careAddr">
-                        <option value="null">전체</option>
+                        <option value="">전체</option>
                           <option value="6110000">서울특별시</option>
                           <option value="6260000">부산광역시</option>
                           <option value="6270000">대구광역시</option>
@@ -206,7 +206,7 @@
                         v-model="search.upKindCd"
                         @change="search.kindCd==null"
                       >
-                        <option value="null">전체</option>
+                        <option value="">전체</option>
                         <option value="417000">개</option>
                         <option value="422400">고양이</option>
                         <option value="429900">기타</option>
@@ -227,6 +227,8 @@
                         v-model="search.kindCd"
                         style="width:250px"
                       >
+                        <option  v-if="!search.upKindCd" value="">전체</option>
+                        
                         <option  v-if="search.upKindCd == 417000" value="null">전체</option>
 
                         <option  v-if="search.upKindCd == 417000" value="000054">골든 리트리버</option>
@@ -674,22 +676,6 @@
                     </form>
                   </div>
 
-                  <!-- 
-                  <div class="shop-pagination"  style="float:left; margin-left:10px; margin-top:4px">
-                      <li class="header-shop-cart" style="display:inline">
-                        <label style="margin-right:10px; color:#0a303a" for="bottomShow">품종</label>
-                        <input type="text" id="search-text" @input="kindSearchList" v-model="search.kindCd" autocomplete="off" style="width:180px"/>
-                        <ul id="test" class="minicart" style="right:26px; top:100px;width:300px; height:300px; display:inline; overflow:auto;">
-                          <table class="table table-hover">
-                            <tbody>
-                              <tr height=2 style="cursor: pointer;" v-for="(kindCd, index) in kindCdList" v-bind:key="index" >
-                                <td  @click="search.kindCd==kindCd" style=" padding:1px" >{{ kindCd }}</td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </ul>
-                      </li>
-                  </div> -->
 
                   <div
                     class="shop-pagination"
@@ -711,22 +697,19 @@
                 <div
                   class="row justify-content-center"
                   style="float: left; margin-top: 10px"
-                  v-if="shelList"
+                  v-if="total != 0"
                 >
                   <div
                     v-for="(shel, index) in shelList"
                     v-bind:key="index"
-                    class="col-lg-4 col-sm-6"
+                     style="width: 341px; height: 457px; padding: 10px;"
                   >
-                    <div class="shop-item mb-55">
-                      <div class="shop-thumb">
-                        <router-link
-                          :to="{ name: 'ShelDetail', params: { no: shel.no } }"
-                        >
+                    <div class="adoption-shop-item mb-55">
+                      <div class="adoption-shop-thumb">
                           <img
                             v-if="shel.popfile"
                             :src="shel.popfile"
-                            style="width: 278px; height: 268px"
+                            style="width: 321px; height: 268px"
                             alt=""
                           />
                           <img
@@ -735,35 +718,42 @@
                             style="background-color: #bcbcbc"
                             alt=""
                           />
-                        </router-link>
+                         <router-link
+                    :to="{ name: 'ShelDetail', params: { no: shel.desertionNo } }"
+                    class="btn"
+                    >보러가기<img src="img/icon/w_pawprint.png" alt=""
+                  /></router-link>
                       </div>
                       <div class="shop-content">
-                        <span>{{ shel.processState }}</span>
-                        <h4 class="title">
-                          {{ shel.noticeSdt }} ~ {{ shel.noticeEdt }}
-                        </h4>
                         <div class="shop-content-bottom">
-                          <span class="price">{{ shel.specialMark }}</span>
-                          <span class="add-cart">
-                            <router-link
-                              :to="{
-                                name: 'ShelDetail',
-                                params: { no: shel.no },
-                              }"
-                            >
-                              상세보기
-                            </router-link>
-                          </span>
+                        <span style="margin-bottom:4px;" class="price">{{ shel.processState }}</span>
+                        </div>
+                        <h4 class="title">
+                          {{ changeDateString(shel.noticeSdt) }} ~ {{ changeDateString(shel.noticeEdt) }}
+                        </h4>
+                         <div class="shop-content-bottom">
+                            <span class="price">장소 : {{ shel.orgNm }}</span>
+                        </div>
+                        <div class="shop-content-bottom">
+                         
+                          <span class="price">특징 : {{ shel.specialMark }}</span>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div
+                <div v-if="total == 0" style="text-align: center; margin-top:20px">
+                  <h3>품종오류가 발생할 수 있으니 축종을 전체로 설정 후 </h3>
+                  <h3>한번 더 검색하시기 바랍니다.</h3>
+                  <img src="/img/bg/logo5.png" alt="">
+                </div>
+
+                <div v-if="total != 0"
                   class="shop-page-meta"
                   style="
                     height: 60px;
+                    width : 100%;
                     padding: 12px;
                     display: flex;
                     justify-content: center;
@@ -782,20 +772,19 @@
                         "
                         v-for="(shel, index) in pagegroup * 10 <= pagegroupmax
                           ? 10
-                          : total % 9"
+                          : Math.ceil((total % 90)/9)"
                         v-bind:key="index"
                         :class="{
                           active: index + 1 + (pagegroup - 1) * 10 == page,
                         }"
                       >
-                        <!-- :class="{active:index+1 == page}" -->
                         <a>
                           {{ index + 1 + (pagegroup - 1) * 10 }}
                         </a>
                       </li>
                       <li>
                         <a
-                          v-show="pagegroup * 10 != pagegroupmax"
+                          v-show="pagegroup * 10 < pagegroupmax"
                           @click="pagegroup++"
                           ><i class="fas fa-angle-double-right"></i
                         ></a>
@@ -817,7 +806,6 @@
 
 <script>
 import axios from "axios";
-const session = window.sessionStorage;
 
 export default {
   name: "App",
@@ -825,20 +813,18 @@ export default {
   data() {
     return {
       search: {
-        noticeSdt: null,
-        noticeEdt: null,
-        kindCd: null,
-        sexCd: null,
-        neuterYn: null,
-        careAddr: null,
-        processState: null,
-        upKindCd : null,
+        noticeSdt: "",
+        noticeEdt: "",
+        upKindCd : "",
+        kindCd: "",
+        neuterYn: "",
+        careAddr: "",
+        processState: "",
       },
       pagegroupmax: 0,
       pagegroup: 1,
       page: 1,
       total: 0,
-      kindCdList: [],
       shelList: [],
     };
   },
@@ -847,127 +833,107 @@ export default {
     this.$store.commit('setHaderindex',1);
   },
   methods: {
-    kindSearchList(el) {
-      this.search.kindCd = el.target.value;
-      let headers = {
-        "at-jwt-access-token": session.getItem("at-jwt-access-token"),
-        "at-jwt-refresh-token": session.getItem("at-jwt-refresh-token"),
-      };
-      axios({
-        method: "get",
-        url: "/api/shel/search/list/" + this.search.kindCd,
-        headers: headers,
-      })
-        .then((res) => {
-          this.$store.dispatch("login/accessTokenRefresh", res); // store아닌곳에서 상황에 따라서 메서드가 다르다
-          this.kindCdList = res.data;
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .then(() => {
-          console.log("kindSearchList End!!");
-        });
+    changeDateString(date){
+      var year = date.substr(0,4);
+      var month = date.substr(4,2);
+      var day = date.substr(6,2);
+    return year + "-" + month + "-" + day
     },
-
     searchShelnimaldefualt() {
-      let headers = {
-        "at-jwt-access-token": session.getItem("at-jwt-access-token"),
-        "at-jwt-refresh-token": session.getItem("at-jwt-refresh-token"),
-      };
+      this.shelList = ""
+      this.$store.commit('loading/load', true);
       axios({
         method: "get",
-        url: "/api/shel/0",
-        headers: headers,
+        url: "/api/shel/1",
       })
         .then((res) => {
-          this.$store.dispatch("login/accessTokenRefresh", res); // 상황에 따라서 메서드가 다르다
           console.log(res.data);
           this.shelList = res.data.shelnimalDtos;
           this.total = res.data.allCount;
-          this.pagegroupmax =
-            this.total % 9 == 0 ? this.total / 9 : this.total / 9 + 1;
+          this.pagegroupmax = Math.ceil(this.total / 9 )
         })
         .catch((error) => {
           console.log(error);
-        })
-        .then(() => {
-          console.log("searchShelnimaldefualt End!!");
-          console.log(this.total);
-          console.log(this.pagegroupmax);
-        });
+        }).finally(() => this.$store.commit('loading/load', false),
+        console.log('searchShelnimaldefualt End!!'),
+)
     },
 
     searchShelnimal() {
-      let headers = {
-        "at-jwt-access-token": session.getItem("at-jwt-access-token"),
-        "at-jwt-refresh-token": session.getItem("at-jwt-refresh-token"),
-      };
+      this.shelList = ""
+      this.$store.commit('loading/load', true);
+      this.page = 1
 
       let data = {
+        noticeSdt: this.search.noticeSdt == null ? null : this.search.noticeSdt.split("-").join(""),
+        noticeEdt: this.search.noticeEdt  == null ? null : this.search.noticeEdt.split("-").join(""),
+        upKindCd : this.search.upKindCd,
         kindCd: this.search.kindCd,
-        sexCd: this.search.sexCd,
         neuterYn: this.search.neuterYn,
         careAddr: this.search.careAddr,
-        offset: 0,
+        processState: this.search.processState,
+        offset: 1,
       };
 
       axios({
         method: "post",
         url: "/api/shel/",
         data: data,
-        headers: headers,
       })
         .then((res) => {
-          this.$store.dispatch("login/accessTokenRefresh", res); // 상황에 따라서 메서드가 다르다
           this.shelList = res.data.shelnimalDtos;
           this.total = res.data.allCount;
-          this.pagegroupmax =
-            this.total % 9 == 0 ? this.total / 9 : this.total / 9 + 1;
+          this.pagegroup = 1
+          this.pagegroupmax = Math.ceil(this.total / 9 )
+          console.log(res)
         })
         .catch((error) => {
           console.log(error);
-        })
-        .then(() => {
-          console.log("searchShelnimal End!!");
-          console.log(this.total);
-          console.log(this.pagegroupmax);
-        });
+           this.shelList = ""
+           this.total = 0
+           this.pagegroupmax = 0
+        }).finally(() => this.$store.commit('loading/load', false),
+        console.log('searchShelnimal End!!'),
+)
     },
 
     searchShelnimalPage(el) {
-      this.page = el;
-      let headers = {
-        "at-jwt-access-token": session.getItem("at-jwt-access-token"),
-        "at-jwt-refresh-token": session.getItem("at-jwt-refresh-token"),
-      };
+       this.shelList = ""
+      this.$store.commit('loading/load', true);
+      this.page = el
 
       let data = {
+        noticeSdt: this.search.noticeSdt == null ? null : this.search.noticeSdt.split("-").join(""),
+        noticeEdt: this.search.noticeEdt  == null ? null : this.search.noticeEdt.split("-").join(""),
+        upKindCd : this.search.upKindCd,
         kindCd: this.search.kindCd,
-        sexCd: this.search.sexCd,
         neuterYn: this.search.neuterYn,
         careAddr: this.search.careAddr,
-        offset: el - 1,
+        processState: this.search.processState,
+        offset: el,
       };
 
       axios({
         method: "post",
         url: "/api/shel/",
         data: data,
-        headers: headers,
       })
-        .then((res) => {
-          this.$store.dispatch("login/accessTokenRefresh", res); // 상황에 따라서 메서드가 다르다
-          this.shelList = null;
+        .then((res) => { 
           this.shelList = res.data.shelnimalDtos;
+          this.total = res.data.allCount;
+          this.pagegroupmax = Math.ceil(this.total / 9 )
           console.log(res.data);
         })
         .catch((error) => {
           console.log(error);
+          this.shelList = ""
+           this.total = 0
+           this.pagegroupmax = 0
         })
-        .then(() => {
-          console.log("searchShelnimalPage End!!");
-        });
+        .finally(() => this.$store.commit('loading/load', false),
+        console.log('searchShelnimalPage End!!'),
+         window.scrollTo(0,0),
+        )
     },
   },
 };
